@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Records - Student Management System | Codec Technologies</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header / Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text">
+                    <h1>Student Management System</h1>
+                    <span>Codec Technologies Internship</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a th:href="@{/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/students}" class="active">Students List</a></li>
+                <li><a th:href="@{/report}">Performance Report</a></li>
+                <li><a th:href="@{/students/new}" class="btn-nav">+ Add Student</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Success Alert Message -->
+        <div th:if="${successMessage}" class="alert alert-success">
+            <span>&#10004;</span>
+            <span th:text="${successMessage}">Operation completed successfully!</span>
+        </div>
+
+        <!-- Error Alert Message -->
+        <div th:if="${errorMessage}" class="alert alert-danger">
+            <span>&#9888;</span>
+            <span th:text="${errorMessage}">An error occurred.</span>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title">
+                <h2>All Student Records</h2>
+                <p>Manage enrolled students, academic marks, and performance records</p>
+            </div>
+            <div>
+                <a th:href="@{/students/new}" class="btn btn-primary">+ Register New Student</a>
+            </div>
+        </div>
+
+        <!-- Search & Filter Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-body" style="padding: 1rem 1.5rem;">
+                <form th:action="@{/students}" method="get" class="search-form">
+                    <input type="text" name="keyword" th:value="${keyword}" 
+                           placeholder="Search by Student ID (e.g. B25DS001) or Name..." 
+                           class="search-input" />
+                    <button type="submit" class="btn btn-primary btn-sm">Search Records</button>
+                    <a th:if="${searchPerformed}" th:href="@{/students}" class="btn btn-secondary btn-sm">Clear Search</a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Student Table Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    Enrolled Students 
+                    <span style="font-size: 0.875rem; font-weight: normal; color: var(--muted-text);"
+                          th:text="'(' + ${#lists.size(students)} + ' found)'"></span>
+                </h3>
+                <span th:if="${searchPerformed}" style="font-size: 0.8125rem; color: var(--primary-blue); font-weight: 600;">
+                    Filtered by keyword: "<span th:text="${keyword}"></span>"
+                </span>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Branch / Dept</th>
+                                <th>Year</th>
+                                <th>Marks</th>
+                                <th>Grade</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Empty State: Show clear message if no student is found -->
+                            <tr th:if="${#lists.isEmpty(students)}">
+                                <td colspan="10" class="empty-state">
+                                    <div class="empty-state-icon">🔍</div>
+                                    <h4 style="margin-bottom: 0.5rem; color: var(--dark-text);">No Student Records Found</h4>
+                                    <p th:if="${searchPerformed}">
+                                        No student matches the search term "<strong><span th:text="${keyword}"></span></strong>". Try searching with another ID or name.
+                                    </p>
+                                    <p th:unless="${searchPerformed}">
+                                        There are currently no students in the database.
+                                    </p>
+                                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: center;">
+                                        <a th:if="${searchPerformed}" th:href="@{/students}" class="btn btn-secondary btn-sm">Reset Search</a>
+                                        <a th:href="@{/students/new}" class="btn btn-primary btn-sm">+ Add New Student</a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Student Row Loop -->
+                            <tr th:each="student, iterStat : ${students}">
+                                <td th:text="${iterStat.count}">1</td>
+                                <td>
+                                    <strong style="color: var(--primary-blue);" th:text="${student.studentId}">B25DS001</strong>
+                                </td>
+                                <td>
+                                    <a th:href="@{/students/{id}(id=${student.id})}" 
+                                       style="text-decoration: none; color: inherit; font-weight: 600;"
+                                       th:text="${student.fullName}">John Doe</a>
+                                </td>
+                                <td th:text="${student.email}" style="font-size: 0.875rem; color: var(--muted-text);">john@example.com</td>
+                                <td th:text="${student.branch}">Data Science</td>
+                                <td th:text="${student.yearOfStudy}">3rd Year</td>
+                                <td>
+                                    <strong th:text="${student.marks}">88.5</strong> / 100
+                                </td>
+                                <td>
+                                    <span th:class="'badge ' + 
+                                        (${student.grade == 'A+'} ? 'badge-a-plus' : 
+                                        (${student.grade == 'A'} ? 'badge-a' : 
+                                        (${student.grade == 'B'} ? 'badge-b' : 
+                                        (${student.grade == 'C'} ? 'badge-c' : 
+                                        (${student.grade == 'D'} ? 'badge-d' : 'badge-f')))))"
+                                        th:text="${student.grade}">A</span>
+                                </td>
+                                <td>
+                                    <span th:class="${student.status == 'Passed' ? 'status-passed' : 'status-failed'}"
+                                          th:text="${student.status}">Passed</span>
+                                </td>
+                                <td>
+                                    <div class="actions-cell" style="justify-content: flex-end;">
+                                        <a th:href="@{/students/{id}(id=${student.id})}" 
+                                           class="btn btn-secondary btn-sm" title="View Full Details">View</a>
+                                        <a th:href="@{/students/edit/{id}(id=${student.id})}" 
+                                           class="btn btn-primary btn-sm" title="Edit Student">Edit</a>
+                                        <!-- Delete action with JS confirmation -->
+                                        <a th:href="@{/students/delete/{id}(id=${student.id})}" 
+                                           class="btn btn-danger btn-sm" 
+                                           th:attr="onclick=|return confirm('Are you sure you want to permanently delete student ${student.fullName} (${student.studentId})?');|"
+                                           title="Delete Student">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Student Management System &bull; <strong>Codec Technologies</strong> Java Internship Project &bull; Powered by Java 17, Spring Boot 3 &amp; MySQL</p>
+    </footer>
+
+</body>
+</html>

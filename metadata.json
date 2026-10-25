@@ -1,0 +1,6 @@
+{
+  "name": "Student Management System - Codec Technologies",
+  "description": "A production-grade Java 17, Spring Boot 3, Hibernate JPA, MySQL and Thymeleaf Student Management System with interactive live simulator, full source code explorer, and 1-click Maven project download for Codec Technologies internship.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

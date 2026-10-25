@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student - Student Management System | Codec Technologies</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header / Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text">
+                    <h1>Student Management System</h1>
+                    <span>Codec Technologies Internship</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a th:href="@{/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/students}">Students List</a></li>
+                <li><a th:href="@{/report}">Performance Report</a></li>
+                <li><a th:href="@{/students/new}" class="btn-nav active">+ Add Student</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Register New Student</h2>
+                <p>Fill in the required academic and contact details to enroll a student record</p>
+            </div>
+            <div>
+                <a th:href="@{/students}" class="btn btn-secondary">&larr; Back to Students</a>
+            </div>
+        </div>
+
+        <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <div class="card-header">
+                <h3>Student Enrollment Form</h3>
+                <span style="font-size: 0.8125rem; color: var(--muted-text);">Fields marked with <span style="color: var(--danger);">*</span> are mandatory</span>
+            </div>
+            <div class="card-body">
+                <!-- Spring Form bound to student DTO with server-side validation -->
+                <form th:action="@{/students}" th:object="${student}" method="post">
+                    
+                    <div class="form-row">
+                        <!-- Student ID -->
+                        <div class="form-group">
+                            <label class="form-label" for="studentId">
+                                Student ID <span class="required">*</span>
+                            </label>
+                            <input type="text" id="studentId" th:field="*{studentId}" 
+                                   class="form-control" 
+                                   th:classappend="${#fields.hasErrors('studentId')} ? 'is-invalid' : ''"
+                                   placeholder="e.g., B25DS001" style="text-transform: uppercase;" required />
+                            <small class="form-hint">Unique alphanumeric institutional identifier</small>
+                            <span class="form-feedback" th:if="${#fields.hasErrors('studentId')}" th:errors="*{studentId}"></span>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="form-group">
+                            <label class="form-label" for="fullName">
+                                Full Name <span class="required">*</span>
+                            </label>
+                            <input type="text" id="fullName" th:field="*{fullName}" 
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid' : ''"
+                                   placeholder="e.g., Jane Doe" required />
+                            <span class="form-feedback" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Email Address -->
+                        <div class="form-group">
+                            <label class="form-label" for="email">
+                                Email Address <span class="required">*</span>
+                            </label>
+                            <input type="email" id="email" th:field="*{email}" 
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                                   placeholder="e.g., student@codectechnologies.com" required />
+                            <small class="form-hint">Must be unique across all students</small>
+                            <span class="form-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="form-group">
+                            <label class="form-label" for="phoneNumber">
+                                Phone Number <span class="required">*</span>
+                            </label>
+                            <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" 
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('phoneNumber')} ? 'is-invalid' : ''"
+                                   placeholder="e.g., +91 9876543210" required />
+                            <span class="form-feedback" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Branch / Department -->
+                        <div class="form-group">
+                            <label class="form-label" for="branch">
+                                Branch / Department <span class="required">*</span>
+                            </label>
+                            <select id="branch" th:field="*{branch}" 
+                                    class="form-control"
+                                    th:classappend="${#fields.hasErrors('branch')} ? 'is-invalid' : ''" required>
+                                <option value="">-- Select Branch --</option>
+                                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                                <option value="Data Science & AI">Data Science & AI</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Electronics & Communication">Electronics & Communication</option>
+                                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                <option value="Electrical Engineering">Electrical Engineering</option>
+                            </select>
+                            <span class="form-feedback" th:if="${#fields.hasErrors('branch')}" th:errors="*{branch}"></span>
+                        </div>
+
+                        <!-- Year of Study -->
+                        <div class="form-group">
+                            <label class="form-label" for="yearOfStudy">
+                                Year of Study <span class="required">*</span>
+                            </label>
+                            <select id="yearOfStudy" th:field="*{yearOfStudy}" 
+                                    class="form-control"
+                                    th:classappend="${#fields.hasErrors('yearOfStudy')} ? 'is-invalid' : ''" required>
+                                <option value="">-- Select Academic Year --</option>
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year">2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                                <option value="4th Year">4th Year</option>
+                            </select>
+                            <span class="form-feedback" th:if="${#fields.hasErrors('yearOfStudy')}" th:errors="*{yearOfStudy}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Marks out of 100 -->
+                    <div class="form-group">
+                        <label class="form-label" for="marks">
+                            Academic Marks (Out of 100) <span class="required">*</span>
+                        </label>
+                        <input type="number" step="0.1" min="0" max="100" id="marks" th:field="*{marks}" 
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('marks')} ? 'is-invalid' : ''"
+                               placeholder="e.g., 85.5" required />
+                        <small class="form-hint">
+                            Grading Scale: 90-100 (A+) | 80-89 (A) | 70-79 (B) | 60-69 (C) | 50-59 (D) | 0-49 (F)
+                        </small>
+                        <span class="form-feedback" th:if="${#fields.hasErrors('marks')}" th:errors="*{marks}"></span>
+                    </div>
+
+                    <!-- Submit / Cancel Actions -->
+                    <div class="form-actions">
+                        <a th:href="@{/students}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">&#10003; Save &amp; Enroll Student</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Student Management System &bull; <strong>Codec Technologies</strong> Java Internship Project &bull; Powered by Java 17, Spring Boot 3 &amp; MySQL</p>
+    </footer>
+
+</body>
+</html>

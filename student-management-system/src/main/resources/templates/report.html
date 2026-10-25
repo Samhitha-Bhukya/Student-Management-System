@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Performance Report - Student Management System | Codec Technologies</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header / Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text">
+                    <h1>Student Management System</h1>
+                    <span>Codec Technologies Internship</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a th:href="@{/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/students}">Students List</a></li>
+                <li><a th:href="@{/report}" class="active">Performance Report</a></li>
+                <li><a th:href="@{/students/new}" class="btn-nav">+ Add Student</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Comprehensive Performance Report</h2>
+                <p>Institutional ranking, grade analysis, and cohort evaluation</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                <button onclick="window.print()" class="btn btn-primary">&#128424; Print Official Report</button>
+                <a th:href="@{/students}" class="btn btn-secondary">Student Records</a>
+            </div>
+        </div>
+
+        <!-- KPI Metrics Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div>
+                    <span class="stat-label">Total Evaluated</span>
+                    <div class="stat-value" th:text="${totalStudents}">0</div>
+                </div>
+                <div class="stat-subtitle">Students assessed</div>
+            </div>
+
+            <div class="stat-card average">
+                <div>
+                    <span class="stat-label">Institutional Average</span>
+                    <div class="stat-value">
+                        <span th:text="${averageMarks}">0.0</span><span style="font-size: 1.25rem;">/100</span>
+                    </div>
+                </div>
+                <div class="stat-subtitle">Cumulative cohort mean score</div>
+            </div>
+
+            <div class="stat-card passed">
+                <div>
+                    <span class="stat-label">Pass Rate</span>
+                    <div class="stat-value">
+                        <span th:text="${passPercentage}">0.0</span><span style="font-size: 1.25rem;">%</span>
+                    </div>
+                </div>
+                <div class="stat-subtitle"><span th:text="${passedCount}">0</span> students achieved &ge; 50 marks</div>
+            </div>
+
+            <div class="stat-card failed">
+                <div>
+                    <span class="stat-label">Remedial Attention</span>
+                    <div class="stat-value" th:text="${failedCount}">0</div>
+                </div>
+                <div class="stat-subtitle">Students with Grade F (&lt; 50 marks)</div>
+            </div>
+        </div>
+
+        <!-- Grade Grading Schema Table -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-header">
+                <h3>Codec Technologies Academic Grading Standard</h3>
+                <span style="font-size: 0.8125rem; color: var(--muted-text);">Institutional grading bands and performance brackets</span>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Grade</th>
+                                <th>Marks Range</th>
+                                <th>Descriptor</th>
+                                <th>Student Count</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge badge-a-plus">A+</span></td>
+                                <td>90 &ndash; 100</td>
+                                <td>Outstanding Excellence</td>
+                                <td><strong th:text="${gradeDistribution['A+']}">0</strong></td>
+                                <td><span class="status-passed">Passed</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-a">A</span></td>
+                                <td>80 &ndash; 89</td>
+                                <td>Excellent</td>
+                                <td><strong th:text="${gradeDistribution['A']}">0</strong></td>
+                                <td><span class="status-passed">Passed</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-b">B</span></td>
+                                <td>70 &ndash; 79</td>
+                                <td>Good</td>
+                                <td><strong th:text="${gradeDistribution['B']}">0</strong></td>
+                                <td><span class="status-passed">Passed</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-c">C</span></td>
+                                <td>60 &ndash; 69</td>
+                                <td>Satisfactory</td>
+                                <td><strong th:text="${gradeDistribution['C']}">0</strong></td>
+                                <td><span class="status-passed">Passed</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-d">D</span></td>
+                                <td>50 &ndash; 59</td>
+                                <td>Pass (Minimum Requirement)</td>
+                                <td><strong th:text="${gradeDistribution['D']}">0</strong></td>
+                                <td><span class="status-passed">Passed</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-f">F</span></td>
+                                <td>0 &ndash; 49</td>
+                                <td>Fail (Remedial Required)</td>
+                                <td><strong th:text="${gradeDistribution['F']}">0</strong></td>
+                                <td><span class="status-failed">Failed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Merit Order Table (Rankings) -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Student Merit Ranking (Sorted by Highest Marks)</h3>
+                <span style="font-size: 0.8125rem; color: var(--muted-text);">Class performance rank list</span>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">Rank</th>
+                                <th>Student ID</th>
+                                <th>Full Name</th>
+                                <th>Department</th>
+                                <th>Year</th>
+                                <th>Marks Obtained</th>
+                                <th>Awarded Grade</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(students)}">
+                                <td colspan="8" class="empty-state">
+                                    <p>No student data available to compute performance report.</p>
+                                </td>
+                            </tr>
+                            <tr th:each="student, iterStat : ${students}">
+                                <td>
+                                    <!-- Medals for Top 3 Rankers -->
+                                    <span th:if="${iterStat.count == 1}" style="font-size: 1.125rem;">🥇 <strong>#1</strong></span>
+                                    <span th:if="${iterStat.count == 2}" style="font-size: 1.125rem;">🥈 <strong>#2</strong></span>
+                                    <span th:if="${iterStat.count == 3}" style="font-size: 1.125rem;">🥉 <strong>#3</strong></span>
+                                    <span th:if="${iterStat.count > 3}" th:text="'#' + ${iterStat.count}">#4</span>
+                                </td>
+                                <td>
+                                    <strong style="color: var(--primary-blue);" th:text="${student.studentId}">B25DS001</strong>
+                                </td>
+                                <td>
+                                    <a th:href="@{/students/{id}(id=${student.id})}" 
+                                       style="text-decoration: none; color: inherit; font-weight: 600;" 
+                                       th:text="${student.fullName}">Student Name</a>
+                                </td>
+                                <td th:text="${student.branch}">Computer Science</td>
+                                <td th:text="${student.yearOfStudy}">3rd Year</td>
+                                <td>
+                                    <strong style="font-size: 1rem;" th:text="${student.marks}">95.0</strong> / 100
+                                </td>
+                                <td>
+                                    <span th:class="'badge ' + 
+                                        (${student.grade == 'A+'} ? 'badge-a-plus' : 
+                                        (${student.grade == 'A'} ? 'badge-a' : 
+                                        (${student.grade == 'B'} ? 'badge-b' : 
+                                        (${student.grade == 'C'} ? 'badge-c' : 
+                                        (${student.grade == 'D'} ? 'badge-d' : 'badge-f')))))"
+                                        th:text="${student.grade}">A+</span>
+                                </td>
+                                <td>
+                                    <span th:class="${student.status == 'Passed' ? 'status-passed' : 'status-failed'}"
+                                          th:text="${student.status}">Passed</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Student Management System &bull; <strong>Codec Technologies</strong> Java Internship Project &bull; Powered by Java 17, Spring Boot 3 &amp; MySQL</p>
+    </footer>
+
+</body>
+</html>

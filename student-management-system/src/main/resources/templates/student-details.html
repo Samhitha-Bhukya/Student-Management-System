@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${student.fullName} + ' - Student Profile | Codec Technologies'">Student Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header / Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text">
+                    <h1>Student Management System</h1>
+                    <span>Codec Technologies Internship</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a th:href="@{/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/students}" class="active">Students List</a></li>
+                <li><a th:href="@{/report}">Performance Report</a></li>
+                <li><a th:href="@{/students/new}" class="btn-nav">+ Add Student</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Student Academic Profile</h2>
+                <p>Individual academic score card and student details</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                <a th:href="@{/students}" class="btn btn-secondary">&larr; Back to Students</a>
+                <a th:href="@{/students/edit/{id}(id=${student.id})}" class="btn btn-primary">&#9998; Edit Student</a>
+                <button onclick="window.print()" class="btn btn-secondary">&#128424; Print Marksheet</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Official Institutional Marksheet</h3>
+                <span style="font-size: 0.8125rem; color: var(--muted-text);">Codec Technologies Academic Verification</span>
+            </div>
+            <div class="card-body">
+                <div class="profile-grid">
+                    <!-- Left Column: Avatar & Quick Status -->
+                    <div class="profile-avatar-box">
+                        <div class="profile-avatar">
+                            <span th:text="${#strings.substring(student.fullName, 0, 1)}">S</span>
+                        </div>
+                        <h3 th:text="${student.fullName}" style="margin-bottom: 0.25rem; color: var(--dark-text);">Student Name</h3>
+                        <p style="color: var(--primary-blue); font-weight: 700; margin-bottom: 1rem;" th:text="${student.studentId}">B25DS001</p>
+                        
+                        <div style="margin: 1.5rem 0; padding: 1rem; background: var(--white); border-radius: 6px; border: 1px solid var(--border-color);">
+                            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--muted-text); font-weight: 600;">Overall Grade</div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary-blue);" th:text="${student.grade}">A</div>
+                            <span th:class="'badge ' + (${student.status == 'Passed' ? 'badge-b' : 'badge-f'})"
+                                  th:text="${student.status}" style="font-size: 0.875rem;">Passed</span>
+                        </div>
+
+                        <div style="font-size: 0.8125rem; color: var(--muted-text); text-align: left;">
+                            <p style="margin-bottom: 0.5rem;"><strong>Department:</strong> <span th:text="${student.branch}">Computer Science</span></p>
+                            <p style="margin-bottom: 0.5rem;"><strong>Academic Year:</strong> <span th:text="${student.yearOfStudy}">3rd Year</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Full Details Table -->
+                    <div>
+                        <h4 style="color: var(--primary-blue); margin-bottom: 1rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem;">
+                            Personal &amp; Academic Credentials
+                        </h4>
+
+                        <table class="table" style="margin-bottom: 1.5rem;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 35%; font-weight: 600; color: var(--muted-text);">Institutional Student ID:</td>
+                                    <td><strong style="color: var(--primary-blue);" th:text="${student.studentId}">B25DS001</strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600; color: var(--muted-text);">Full Student Name:</td>
+                                    <td><strong th:text="${student.fullName}">Full Name</strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600; color: var(--muted-text);">Email Address:</td>
+                                    <td><a th:href="'mailto:' + ${student.email}" th:text="${student.email}" style="color: var(--primary-blue); text-decoration: none;">student@example.com</a></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600; color: var(--muted-text);">Contact Phone:</td>
+                                    <td th:text="${student.phoneNumber}">+91 9876543210</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600; color: var(--muted-text);">Branch / Department:</td>
+                                    <td th:text="${student.branch}">Data Science</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600; color: var(--muted-text);">Current Year:</td>
+                                    <td th:text="${student.yearOfStudy}">2nd Year</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600; color: var(--muted-text);">Academic Score (Max 100):</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 1rem;">
+                                            <span style="font-size: 1.5rem; font-weight: 700; color: var(--dark-text);" th:text="${student.marks}">88.0</span>
+                                            <div style="flex: 1; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; max-width: 200px;">
+                                                <div th:style="'width: ' + ${student.marks} + '%; height: 100%; background: ' + (${student.marks >= 50} ? '#16a34a' : '#dc2626')"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600; color: var(--muted-text);">Grading Standard:</td>
+                                    <td>
+                                        <span th:class="'badge ' + 
+                                            (${student.grade == 'A+'} ? 'badge-a-plus' : 
+                                            (${student.grade == 'A'} ? 'badge-a' : 
+                                            (${student.grade == 'B'} ? 'badge-b' : 
+                                            (${student.grade == 'C'} ? 'badge-c' : 
+                                            (${student.grade == 'D'} ? 'badge-d' : 'badge-f')))))"
+                                            th:text="${student.grade} + ' (' + (${student.status == 'Passed' ? 'Passed with Distinction/Credit' : 'Failed') + ')'">
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600; color: var(--muted-text);">Performance Remarks:</td>
+                                    <td>
+                                        <span th:if="${student.marks >= 90}">Outstanding mastery &amp; academic excellence (Grade A+).</span>
+                                        <span th:if="${student.marks >= 80 and student.marks < 90}">Excellent performance and subject grasp (Grade A).</span>
+                                        <span th:if="${student.marks >= 70 and student.marks < 80}">Good performance with consistent coursework (Grade B).</span>
+                                        <span th:if="${student.marks >= 60 and student.marks < 70}">Satisfactory achievement meeting requirements (Grade C).</span>
+                                        <span th:if="${student.marks >= 50 and student.marks < 60}">Passing score. Recommended to improve core foundations (Grade D).</span>
+                                        <span th:if="${student.marks < 50}" style="color: var(--danger); font-weight: 600;">Remedial coursework required. Did not meet passing threshold (&lt;50 marks).</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600; color: var(--muted-text);">Record Created:</td>
+                                    <td th:text="${#temporals.format(student.createdAt, 'dd-MMM-yyyy HH:mm')} ?: 'N/A'">2026-10-25</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div style="display: flex; gap: 0.75rem;">
+                            <a th:href="@{/students/edit/{id}(id=${student.id})}" class="btn btn-primary btn-sm">Edit Information</a>
+                            <a th:href="@{/students/delete/{id}(id=${student.id})}" 
+                               class="btn btn-danger btn-sm"
+                               th:attr="onclick=|return confirm('Are you sure you want to delete ${student.fullName}?');|">Delete Record</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Student Management System &bull; <strong>Codec Technologies</strong> Java Internship Project &bull; Powered by Java 17, Spring Boot 3 &amp; MySQL</p>
+    </footer>
+
+</body>
+</html>

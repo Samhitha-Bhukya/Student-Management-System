@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Error - Student Management System | Codec Technologies</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text">
+                    <h1>Student Management System</h1>
+                    <span>Codec Technologies Internship</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a th:href="@{/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/students}">Students List</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="card" style="max-width: 650px; margin: 3rem auto; text-align: center;">
+            <div class="card-body" style="padding: 3rem 2rem;">
+                <div style="font-size: 3.5rem; margin-bottom: 1rem;">⚠️</div>
+                <h2 style="color: var(--danger); margin-bottom: 0.75rem;">An Error Occurred</h2>
+                <p style="color: var(--muted-text); margin-bottom: 1.5rem;" th:text="${errorMessage}">
+                    The system encountered an unexpected issue while processing your request.
+                </p>
+                <div style="display: flex; justify-content: center; gap: 1rem;">
+                    <a th:href="@{/dashboard}" class="btn btn-primary">Return to Dashboard</a>
+                    <a th:href="@{/students}" class="btn btn-secondary">View Students List</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Student Management System &bull; <strong>Codec Technologies</strong> Java Internship Project</p>
+    </footer>
+
+</body>
+</html>

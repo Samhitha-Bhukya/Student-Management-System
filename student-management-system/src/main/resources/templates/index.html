@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Student Management System | Codec Technologies</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header / Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text">
+                    <h1>Student Management System</h1>
+                    <span>Codec Technologies Internship</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a th:href="@{/dashboard}" class="active">Dashboard</a></li>
+                <li><a th:href="@{/students}">Students List</a></li>
+                <li><a th:href="@{/report}">Performance Report</a></li>
+                <li><a th:href="@{/students/new}" class="btn-nav">+ Add Student</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Page Title & Greeting -->
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Administrative Dashboard</h2>
+                <p>Real-time academic performance summary and enrollment overview</p>
+            </div>
+            <div>
+                <a th:href="@{/students/new}" class="btn btn-primary">+ Register New Student</a>
+            </div>
+        </div>
+
+        <!-- 4 KPI Summary Cards -->
+        <div class="stats-grid">
+            <!-- Total Students -->
+            <div class="stat-card">
+                <div>
+                    <span class="stat-label">Total Enrolled</span>
+                    <div class="stat-value" th:text="${totalStudents}">0</div>
+                </div>
+                <div class="stat-subtitle">Registered student records</div>
+            </div>
+
+            <!-- Average Marks -->
+            <div class="stat-card average">
+                <div>
+                    <span class="stat-label">Class Average Marks</span>
+                    <div class="stat-value">
+                        <span th:text="${averageMarks}">0.0</span><span style="font-size: 1.25rem; font-weight: 500;">/100</span>
+                    </div>
+                </div>
+                <div class="stat-subtitle">Overall academic performance</div>
+            </div>
+
+            <!-- Passed Students -->
+            <div class="stat-card passed">
+                <div>
+                    <span class="stat-label">Passed Students</span>
+                    <div class="stat-value" th:text="${passedCount}">0</div>
+                </div>
+                <div class="stat-subtitle">
+                    <strong th:text="${passPercentage}">0.0</strong>% pass rate (&ge; 50 marks)
+                </div>
+            </div>
+
+            <!-- Failed Students -->
+            <div class="stat-card failed">
+                <div>
+                    <span class="stat-label">Failed / Need Support</span>
+                    <div class="stat-value" th:text="${failedCount}">0</div>
+                </div>
+                <div class="stat-subtitle">Students with marks &lt; 50 (Grade F)</div>
+            </div>
+        </div>
+
+        <!-- Grade Distribution Overview -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Academic Grade Distribution</h3>
+                <span style="font-size: 0.8125rem; color: var(--muted-text);">Rule: A+ (90-100), A (80-89), B (70-79), C (60-69), D (50-59), F (&lt;50)</span>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; text-align: center;">
+                    <div style="background: #eff6ff; padding: 1rem; border-radius: 8px; border: 1px solid #bfdbfe;">
+                        <span class="badge badge-a-plus" style="font-size: 0.875rem;">Grade A+</span>
+                        <div style="font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem; color: #1e40af;" 
+                             th:text="${gradeDistribution['A+']}">0</div>
+                        <span style="font-size: 0.75rem; color: var(--muted-text);">90 - 100 Marks</span>
+                    </div>
+
+                    <div style="background: #eef2ff; padding: 1rem; border-radius: 8px; border: 1px solid #c7d2fe;">
+                        <span class="badge badge-a" style="font-size: 0.875rem;">Grade A</span>
+                        <div style="font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem; color: #3730a3;" 
+                             th:text="${gradeDistribution['A']}">0</div>
+                        <span style="font-size: 0.75rem; color: var(--muted-text);">80 - 89 Marks</span>
+                    </div>
+
+                    <div style="background: #ecfdf5; padding: 1rem; border-radius: 8px; border: 1px solid #a7f3d0;">
+                        <span class="badge badge-b" style="font-size: 0.875rem;">Grade B</span>
+                        <div style="font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem; color: #065f46;" 
+                             th:text="${gradeDistribution['B']}">0</div>
+                        <span style="font-size: 0.75rem; color: var(--muted-text);">70 - 79 Marks</span>
+                    </div>
+
+                    <div style="background: #fefce8; padding: 1rem; border-radius: 8px; border: 1px solid #fef08a;">
+                        <span class="badge badge-c" style="font-size: 0.875rem;">Grade C</span>
+                        <div style="font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem; color: #854d0e;" 
+                             th:text="${gradeDistribution['C']}">0</div>
+                        <span style="font-size: 0.75rem; color: var(--muted-text);">60 - 69 Marks</span>
+                    </div>
+
+                    <div style="background: #fff7ed; padding: 1rem; border-radius: 8px; border: 1px solid #fed7aa;">
+                        <span class="badge badge-d" style="font-size: 0.875rem;">Grade D</span>
+                        <div style="font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem; color: #9a3412;" 
+                             th:text="${gradeDistribution['D']}">0</div>
+                        <span style="font-size: 0.75rem; color: var(--muted-text);">50 - 59 Marks</span>
+                    </div>
+
+                    <div style="background: #fef2f2; padding: 1rem; border-radius: 8px; border: 1px solid #fecaca;">
+                        <span class="badge badge-f" style="font-size: 0.875rem;">Grade F</span>
+                        <div style="font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem; color: #991b1b;" 
+                             th:text="${gradeDistribution['F']}">0</div>
+                        <span style="font-size: 0.75rem; color: var(--muted-text);">0 - 49 Marks</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Student Registrations Table -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Recent Student Registrations</h3>
+                <a th:href="@{/students}" class="btn btn-secondary btn-sm">View All Students &rarr;</a>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Full Name</th>
+                                <th>Department / Branch</th>
+                                <th>Year</th>
+                                <th>Marks</th>
+                                <th>Grade</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(recentStudents)}">
+                                <td colspan="8" class="empty-state">
+                                    <div class="empty-state-icon">📋</div>
+                                    <p>No student records found in the database.</p>
+                                    <a th:href="@{/students/new}" class="btn btn-primary btn-sm" style="margin-top: 1rem;">Add First Student</a>
+                                </td>
+                            </tr>
+                            <tr th:each="student : ${recentStudents}">
+                                <td>
+                                    <strong style="color: var(--primary-blue);" th:text="${student.studentId}">B25DS001</strong>
+                                </td>
+                                <td th:text="${student.fullName}">John Doe</td>
+                                <td th:text="${student.branch}">Computer Science</td>
+                                <td th:text="${student.yearOfStudy}">2nd Year</td>
+                                <td>
+                                    <strong th:text="${student.marks}">85.0</strong> / 100
+                                </td>
+                                <td>
+                                    <span th:class="'badge ' + 
+                                        (${student.grade == 'A+'} ? 'badge-a-plus' : 
+                                        (${student.grade == 'A'} ? 'badge-a' : 
+                                        (${student.grade == 'B'} ? 'badge-b' : 
+                                        (${student.grade == 'C'} ? 'badge-c' : 
+                                        (${student.grade == 'D'} ? 'badge-d' : 'badge-f')))))"
+                                        th:text="${student.grade}">A</span>
+                                </td>
+                                <td>
+                                    <span th:class="${student.status == 'Passed' ? 'status-passed' : 'status-failed'}"
+                                          th:text="${student.status}">Passed</span>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a th:href="@{/students/{id}(id=${student.id})}" class="btn btn-secondary btn-sm" title="View Profile">View</a>
+                                        <a th:href="@{/students/edit/{id}(id=${student.id})}" class="btn btn-primary btn-sm" title="Edit">Edit</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Student Management System &bull; <strong>Codec Technologies</strong> Java Internship Project &bull; Powered by Java 17, Spring Boot 3 &amp; MySQL</p>
+    </footer>
+
+</body>
+</html>
